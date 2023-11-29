@@ -4,17 +4,22 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export default function quiz() {
+  // Getting Id
+  const params = useSearchParams();
+  const id = params.get("Id");
   // Fetching data
   const [data, setData] = useState();
   const [results, setResults] = useState({});
+  // console.log("results", results);
   async function getData() {
     try {
       const res = await axios.get("http://localhost:2007/");
       // console.log("");
-      console.log("dsadjoias", res.data);
+      console.log("dsadjoias", res.data.quiz);
       setData(res.data);
+      var tempQuiz = res.data.quiz.filter((e) => e._id, id)[0];
       setResults(
-        res.data.quiz.reduce((prev, _, index) => {
+        tempQuiz.questions.reduce((prev, _, index) => {
           return { ...prev, [index + 1]: false };
         }, {})
       );
@@ -24,12 +29,8 @@ export default function quiz() {
   }
   useEffect(() => {
     getData();
-  }, []);
+  }, [id]);
   const [questionNumber, setQuestionNumber] = useState(1);
-
-  // Getting Id
-  const params = useSearchParams();
-  const id = params.get("Id");
 
   // Changing the page
   const router = useRouter();
@@ -39,14 +40,24 @@ export default function quiz() {
   // Resetter
   const retaker = () => {
     setQuestionNumber(1);
+    results[1] = false;
     Object.keys(results).map((answer) => {
       setResults({ ...results, [answer]: false });
     });
+    console.log(results);
   };
   // Main Page
   if (data == null) {
     return <div>loading...</div>;
   }
+  // Id Checker
+  var idFilter = {};
+  data.quiz.map((e) => {
+    if (e._id == id) {
+      idFilter = e;
+    }
+  });
+
   return (
     <div className="flex flex-col">
       <button
@@ -57,30 +68,28 @@ export default function quiz() {
       >
         Give up
       </button>
-      {data.quiz[id - 1]?.name}
+      {idFilter.name}
       {questionNumber < Object.keys(results).length + 1 ? (
         <div>
-          <p>{data.quiz[id - 1]?.questions[questionNumber - 1].question}</p>
+          <p>{idFilter.questions[questionNumber - 1].question}</p>
           <div className="flex gap-2">
-            {data.quiz[id - 1]?.questions[questionNumber - 1].answers.map(
+            {idFilter.questions[questionNumber - 1].answers.map(
               (question, idx) => {
                 return (
                   <button
                     onClick={() => {
                       if (
                         idx + 1 ==
-                        data.quiz[id - 1]?.questions[questionNumber - 1].correct
+                        idFilter.questions[questionNumber - 1].correct
                       ) {
                         setResults((prev) => ({
                           ...prev,
                           [questionNumber]: true,
                         }));
-                        console.log("dhsoiajdiosa", questionNumber);
                         setQuestionNumber(questionNumber + 1);
                       } else {
                         setQuestionNumber(questionNumber + 1);
                       }
-                      console.log(results);
                     }}
                     className="border-2 hover:bg-gray-200"
                   >
@@ -100,9 +109,9 @@ export default function quiz() {
                 question {idx + 1}:{" "}
                 {results[x]
                   ? "Correct"
-                  : `Incorrect :/ Akshually answer: ${
-                      data.quiz[id - 1]?.questions[idx].answers[
-                        data.quiz[id - 1]?.questions[idx].correct - 1
+                  : `Incorrect :/ Akshually der answer is: ${
+                      idFilter.questions[idx].answers[
+                        idFilter.questions[idx].correct - 1
                       ]
                     }`}
               </p>
