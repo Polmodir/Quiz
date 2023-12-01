@@ -1,6 +1,7 @@
 import { UserModel } from "../../models/user-model.js";
 import { QuizModel } from "../../models/quiz-model.js";
 import { request } from "http";
+import nodemailer from "nodemailer";
 
 export const getTypes = async (req, res) => {
   const users = await UserModel.find({});
@@ -39,4 +40,32 @@ export const deleteQuiz = async (req, res) => {
 
   await QuizModel.deleteOne({ _id: id });
   res.status(200).send({ users: users, quiz: quiz });
+};
+export const idVerify = async (req, res) => {
+  const body = req.body;
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "quizmaster060@gmail.com",
+      pass: "dwoocbwaxswhrpdj",
+    },
+  });
+  const mailOptions = {
+    from: "quizmaster060@gmail.com",
+    to: body.gmail,
+    subject: "Your super duper secret code",
+    text: code,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email: ", error);
+    } else {
+      console.log("Email sent: ", info.response);
+    }
+  });
+  res.status(200).send({ code: code });
 };

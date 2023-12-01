@@ -18,21 +18,7 @@ export default function Home() {
   useEffect(() => {
     getData();
   }, []);
-
-  // Typer
-  const [list, setList] = useState({
-    logInMail: "",
-    logInPass: "",
-  });
-  const typer = (x, utga) => {
-    Object.keys(list).map((y) => {
-      if (utga == y) {
-        list[y] = x;
-        console.log(list[y]);
-      }
-    });
-  };
-  // Log In function
+  // User Information
   const [logState, setLogState] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
   useEffect(() => {
@@ -42,23 +28,13 @@ export default function Home() {
       setCurrentUser(localStorage.getItem("currentUser"));
     }
   }, []);
-  const logInFunction = () => {
-    data.users.map((x) => {
-      if (x.email == list.logInMail && x.password == list.logInPass) {
-        localStorage.setItem("loggedIn", true);
-        setLogState(true);
-        localStorage.setItem("currentUser", list.logInMail);
-        setCurrentUser(list.logInMail);
-      } else {
-        alert("wrong email or pass");
-      }
-    });
-  };
-  console.log(currentUser);
   // Changing the page
   const router = useRouter();
   const startQuiz = (quizId) => {
     router.push(`/quiz?Id=${quizId}`);
+  };
+  const logIn = () => {
+    router.push(`login`);
   };
   const createQuiz = () => {
     router.push(`/create`);
@@ -73,32 +49,7 @@ export default function Home() {
   }
   // Log in page
   if (logState == false) {
-    return (
-      <div className="flex flex-col items-center">
-        <p> log in</p>
-        <input
-          onChange={(e) => typer(e.target.value, "logInMail")}
-          className="border-2"
-          placeholder="gmail"
-        ></input>
-        <input
-          onChange={(e) => typer(e.target.value, "logInPass")}
-          className="border-2"
-          placeholder="password"
-        ></input>
-        <button
-          onClick={() => {
-            logInFunction();
-          }}
-          className="bg-blue-200 hover:bg-blue-300"
-        >
-          submit
-        </button>
-        <button className="bg-green-200 hover:bg-green-300">
-          or Create a new account
-        </button>
-      </div>
-    );
+    logIn();
   }
   console.log(logState);
   // Logged in page
