@@ -48,7 +48,7 @@ export default function Home() {
     return <div>loading...</div>;
   }
   // Log in page
-  if (logState == false) {
+  if (logState !== null && logState == false) {
     logIn();
   }
   console.log(logState);
@@ -74,6 +74,7 @@ export default function Home() {
             return (
               <div className="border-2 border-black">
                 {quizes.name}
+                <p>question amount: {quizes.questions.length}</p>
                 {quizes.creator == currentUser ? (
                   <div>
                     <p>creator: you</p>
@@ -81,6 +82,7 @@ export default function Home() {
                       className="bg-red-200 hover:bg-red-300"
                       onClick={() => {
                         deleter(quizes._id);
+                        getData();
                       }}
                     >
                       delete

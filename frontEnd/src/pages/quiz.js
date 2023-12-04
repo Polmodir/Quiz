@@ -37,6 +37,14 @@ export default function quiz() {
   const goHome = () => {
     router.push(`/`);
   };
+  // Log In function
+  const [logState, setLogState] = useState(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const logStateFrom = localStorage.getItem("loggedIn");
+      setLogState(logStateFrom === "true");
+    }
+  }, []);
   // Resetter
   const retaker = () => {
     setQuestionNumber(1);
@@ -57,7 +65,9 @@ export default function quiz() {
       idFilter = e;
     }
   });
-
+  if (logState !== null && logState == false) {
+    goHome();
+  }
   return (
     <div className="flex flex-col">
       <button

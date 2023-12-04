@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Image from "next/image";
 
 export default function Login() {
   const [page, setPage] = useState("logIn");
@@ -53,8 +54,6 @@ export default function Login() {
         localStorage.setItem("currentUser", list.logInMail);
         setCurrentUser(list.logInMail);
         goHome();
-      } else {
-        alert("wrong email or pass");
       }
     });
   };
@@ -95,31 +94,42 @@ export default function Login() {
   if (data == null) {
     return <div>loading...</div>;
   }
+  if (logState !== null && logState == true) {
+    goHome();
+  }
   if (page == "logIn") {
     return (
-      <div className="flex flex-col items-center">
-        <p> log in</p>
-        <input
-          onChange={(e) => typer(e.target.value, "logInMail")}
-          className="border-2"
-          placeholder="gmail"
-        ></input>
-        <input
-          onChange={(e) => typer(e.target.value, "logInPass")}
-          className="border-2"
-          placeholder="password"
-        ></input>
+      <div className="flex flex-col gap-4 justify-center items-center h-[100vh] bg-[url('/background2.gif')] text-blue-100 tracking-[8px] font-mono">
+        <Image src={"/mrrobot.png"} width={467.25} height={458.75} />
+        <p className="text-red-900 text-[13px]">
+          литералли юү логгинг ин раят наув
+        </p>
+        <p className="text-4xl tracking-[20px] mb-[100px]"> LOG IN</p>
+        <div className="flex flex-col items-center">
+          <p>ENTER YOUR EMAIL</p>
+          <input
+            onChange={(e) => typer(e.target.value, "logInMail")}
+            className="outline-none decoration-none text-black tracking-[-1px] w-[275px]"
+          ></input>
+        </div>
+        <div className="flex flex-col items-center">
+          <p className="tracking-[5px]">ENTER YOUR PASSWORD</p>
+          <input
+            onChange={(e) => typer(e.target.value, "logInPass")}
+            className="outline-none decoration-none text-black tracking-[-1px] w-[275px]"
+          ></input>
+        </div>
         <button
           onClick={() => {
             logInFunction();
           }}
-          className="bg-blue-200 hover:bg-blue-300"
+          className="border-2 border-blue-100 flex items-center justify-center tracking-[8px] hover:bg-blue-400"
         >
           submit
         </button>
         <button
           onClick={() => setPage("Creating")}
-          className="bg-green-200 hover:bg-green-300"
+          className=" hover:bg-green-300 tracking-[8px]"
         >
           or Create a new account
         </button>

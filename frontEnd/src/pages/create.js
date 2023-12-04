@@ -10,6 +10,20 @@ export default function create() {
       setCurrentUser(localStorage.getItem("currentUser"));
     }
   }, []);
+  // Go Home
+  const router = useRouter();
+  const goHome = () => {
+    router.push(`/`);
+  };
+  // Log In function
+  const [logState, setLogState] = useState(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const logStateFrom = localStorage.getItem("loggedIn");
+      setLogState(logStateFrom === "true");
+      console.log(logState);
+    }
+  }, []);
   // Text Stuff
   const [typName, setTypName] = useState("");
   const [list, setList] = useState([
@@ -40,11 +54,6 @@ export default function create() {
       },
     ]);
   };
-  // Go Home
-  const router = useRouter();
-  const goHome = () => {
-    router.push(`/`);
-  };
   // Finisher
   const finisher = () => {
     var testPost = {
@@ -62,6 +71,9 @@ export default function create() {
     });
     axios.post(`http://localhost:2007/`, testPost);
   };
+  if (logState !== null && logState == false) {
+    goHome();
+  }
   return (
     <div className="m-2">
       <button
