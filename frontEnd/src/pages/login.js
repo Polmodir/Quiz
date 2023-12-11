@@ -76,6 +76,7 @@ export default function Login() {
   const goHome = () => {
     router.push(`/`);
   };
+  // Creating account function with email code checker
   const createAccount = async () => {
     console.log(code, list.pin);
     if (code == list.pin) {
@@ -92,29 +93,38 @@ export default function Login() {
     }
   };
   if (data == null) {
-    return <div>loading...</div>;
+    return (
+      <div className="bg-black h-[100vh] text-green-500 font-[monospace]">
+        <div className="bg-white text-black p-1 border-t-2 border-x-2 flex items-center gap-2">
+          <Image src={"/cmd.png"} width={25} height={25} />
+          Q:\front-end\src\pages\loader.exe
+        </div>
+        <p className="p-1">loading...</p>
+      </div>
+    );
   }
   if (logState !== null && logState == true) {
     goHome();
   }
   if (page == "logIn") {
     return (
-      <div className="flex flex-col gap-4 justify-center items-center h-[100vh] bg-[url('/background2.gif')] text-blue-100 tracking-[8px] font-mono">
+      <div className="flex flex-col gap-4 justify-center items-center h-[100vh] bg-[url('/background2.gif')] text-blue-100 tracking-[8px] font-[serif]">
         <Image src={"/mrrobot.png"} width={467.25} height={458.75} />
-        <p className="text-red-900 text-[13px]">
-          литералли юү логгинг ин раят наув
+        <p className="text-red-900 text-[13px] font-[monospace]">
+          literally you logging in rn
         </p>
         <p className="text-4xl tracking-[20px] mb-[100px]"> LOG IN</p>
         <div className="flex flex-col items-center">
-          <p>ENTER YOUR EMAIL</p>
+          <p className="font-[monospace]">ENTER YOUR EMAIL</p>
           <input
             onChange={(e) => typer(e.target.value, "logInMail")}
             className="outline-none decoration-none text-black tracking-[-1px] w-[275px]"
           ></input>
         </div>
         <div className="flex flex-col items-center">
-          <p className="tracking-[5px]">ENTER YOUR PASSWORD</p>
+          <p className="tracking-[5px] font-[monospace]">ENTER YOUR PASSWORD</p>
           <input
+            type="password"
             onChange={(e) => typer(e.target.value, "logInPass")}
             className="outline-none decoration-none text-black tracking-[-1px] w-[275px]"
           ></input>
@@ -123,25 +133,37 @@ export default function Login() {
           onClick={() => {
             logInFunction();
           }}
-          className="border-2 border-blue-100 flex items-center justify-center tracking-[8px] hover:bg-blue-400"
+          className="border-2 border-blue-100 tracking-[8px] hover:bg-green-400 pl-[10px] font-[monospace]"
         >
           submit
         </button>
         <button
           onClick={() => setPage("Creating")}
-          className=" hover:bg-green-300 tracking-[8px]"
+          className="border-2 border-blue-100 pl-[10px] tracking-[8px] hover:bg-blue-400 font-[monospace]"
         >
-          or Create a new account
+          Create a new account
         </button>
       </div>
     );
   } else if (page == "Creating") {
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col gap-2 items-center justify-center bg-[url('/background3.gif')] h-[100vh] font-[serif]">
+        <div className="flex flex-col items-center tracking-[8px] text-sm text-yellow-200 pb-20">
+          <Image
+            src={"/god.webp"}
+            width={576.875}
+            height={485}
+            className="m-[-50px]"
+          />
+          <p>Genesis 1:27</p>
+          <p>So God created man in His own image,</p>
+          <p> in the image of God he created him, </p>
+          <p> male and female He created them. </p>
+        </div>
         {pin ? (
-          <div>
+          <div className="flex flex-col gap-2 items-center">
             <input
-              className="w-[270px]"
+              className="outline-none decoration-none w-[250px] flex pl-2"
               onChange={(e) => typer(e.target.value, "pin")}
               placeholder="enter the pin code sent to your email"
             ></input>
@@ -149,21 +171,29 @@ export default function Login() {
               onClick={() => {
                 createAccount();
               }}
+              className="font-[monospace] tracking-[8px] border-2 pl-2 w-[120px] text-white hover:bg-white hover:text-black"
             >
               enter
             </button>
           </div>
         ) : (
-          <div>
+          <div className="flex flex-col gap-2 items-center">
             <input
               onChange={(e) => typer(e.target.value, "createMail")}
+              className="outline-none decoration-none pl-1"
               placeholder="email"
             />
             <input
               onChange={(e) => typer(e.target.value, "createPass")}
+              className="outline-none decoration-none pl-1"
               placeholder="password"
             />
-            <button onClick={() => submit()}>enter</button>
+            <button
+              className="tracking-[8px] border-2 w-[100px] pl-2 font-[monospace] text-white hover:bg-yellow-400 hover:text-black"
+              onClick={() => submit()}
+            >
+              enter
+            </button>
           </div>
         )}
         <button
@@ -171,6 +201,7 @@ export default function Login() {
             setPage("logIn");
             setPin(false);
           }}
+          className="tracking-[8px] border-2 pl-2 w-[120px] font-[monospace] text-white hover:bg-red-400 hover:text-black"
         >
           cancel
         </button>

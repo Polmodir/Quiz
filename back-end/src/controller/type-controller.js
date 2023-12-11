@@ -1,6 +1,7 @@
 import { UserModel } from "../../models/user-model.js";
 import { QuizModel } from "../../models/quiz-model.js";
 import { request } from "http";
+import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 
 export const getTypes = async (req, res) => {
@@ -12,11 +13,11 @@ export const postTypes = async (req, res) => {
   const body = req.body;
   const users = await UserModel.find({});
   const quiz = await QuizModel.find({});
-
+  const hashedPassword = await bcrypt.hash(body.password, 10);
   if (body.type == "user") {
     await UserModel.create({
       email: body.email,
-      password: body.password,
+      password: hashedPassword,
     });
     res.status(200).send({ users: users, quiz: quiz });
   }
@@ -68,4 +69,8 @@ export const idVerify = async (req, res) => {
     }
   });
   res.status(200).send({ code: code });
+};
+
+export const test = async (req, res) => {
+  const body = req.body;
 };

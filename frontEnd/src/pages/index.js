@@ -45,7 +45,15 @@ export default function Home() {
   };
   // Loading
   if (data == null) {
-    return <div>loading...</div>;
+    return (
+      <div className="bg-black h-[100vh] text-green-500 font-[monospace]">
+        <div className="bg-white text-black p-1 border-t-2 border-x-2 flex items-center gap-2">
+          <Image src={"/cmd.png"} width={25} height={25} />
+          Q:\front-end\src\pages\loader.exe
+        </div>
+        <p className="p-1">loading...</p>
+      </div>
+    );
   }
   // Log in page
   if (logState !== null && logState == false) {
@@ -68,40 +76,44 @@ export default function Home() {
             Log Out
           </button>
         </div>
-        <div className="flex gap-2">
+        <div>
           Quizes:
-          {data.quiz.map((quizes) => {
-            return (
-              <div className="border-2 border-black">
-                {quizes.name}
-                <p>question amount: {quizes.questions.length}</p>
-                {quizes.creator == currentUser ? (
-                  <div>
-                    <p>creator: you</p>
-                    <button
-                      className="bg-red-200 hover:bg-red-300"
-                      onClick={() => {
-                        deleter(quizes._id);
-                        getData();
-                      }}
-                    >
-                      delete
-                    </button>
-                  </div>
-                ) : (
-                  <p>creator: {quizes.creator}</p>
-                )}
-                <button
-                  className="bg-gray-200 hover:bg-gray-300"
-                  onClick={() => {
-                    startQuiz(quizes._id);
-                  }}
+          <div className="flex gap-2 bg-blue-300 p-2 rounded-xl">
+            {data.quiz.map((quizes) => {
+              return (
+                <div
+                  className={`border-2 border-black w-[250px] h-[200px] flex flex-col items-center justify-center bg-white`}
                 >
-                  Start Quiz
-                </button>
-              </div>
-            );
-          })}
+                  {quizes.name.toUpperCase()}
+                  <p>question amount: {quizes.questions.length}</p>
+                  {quizes.creator == currentUser ? (
+                    <div>
+                      <p>creator: you</p>
+                      <button
+                        className="bg-red-200 hover:bg-red-300"
+                        onClick={() => {
+                          deleter(quizes._id);
+                          getData();
+                        }}
+                      >
+                        delete
+                      </button>
+                    </div>
+                  ) : (
+                    <p>creator: {quizes.creator}</p>
+                  )}
+                  <button
+                    className="bg-gray-200 hover:bg-gray-300"
+                    onClick={() => {
+                      startQuiz(quizes._id);
+                    }}
+                  >
+                    Start Quiz
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
         <button
           onClick={() => {

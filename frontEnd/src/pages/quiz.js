@@ -2,6 +2,7 @@ import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function quiz() {
   // Getting Id
@@ -56,7 +57,15 @@ export default function quiz() {
   };
   // Main Page
   if (data == null) {
-    return <div>loading...</div>;
+    return (
+      <div className="bg-black h-[100vh] text-green-500 font-[monospace]">
+        <div className="bg-white text-black p-1 border-t-2 border-x-2 flex items-center gap-2">
+          <Image src={"/cmd.png"} width={25} height={25} />
+          Q:\front-end\src\pages\loader.exe
+        </div>
+        <p className="p-1">loading...</p>
+      </div>
+    );
   }
   // Id Checker
   var idFilter = {};
@@ -112,6 +121,10 @@ export default function quiz() {
         </div>
       ) : (
         <div>
+          <p>
+            {idFilter.questions.length}/
+            {Object.keys(results).filter((key) => results[key] == true).length}
+          </p>
           your results:
           {Object.keys(results).map((x, idx) => {
             return (
