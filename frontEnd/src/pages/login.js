@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
+import Loading from "./components/Loading";
 
 export default function Login() {
   const [page, setPage] = useState("logIn");
@@ -46,18 +47,23 @@ export default function Login() {
       setCurrentUser(localStorage.getItem("currentUser"));
     }
   }, []);
-  const logInFunction = () => {
-    data.users.map((x) => {
-      if (x.email == list.logInMail && x.password == list.logInPass) {
-        localStorage.setItem("loggedIn", true);
-        setLogState(true);
-        localStorage.setItem("currentUser", list.logInMail);
-        setCurrentUser(list.logInMail);
-        goHome();
-      }
+  const logInFunction = async () => {
+    const res = await axios.post("http://localhost:2007/login", {
+      email: list.logInMail,
+      password: list.logInPass,
     });
+    if (res.data.status == true) {
+      console.log("its done");
+      localStorage.setItem("loggedIn", true);
+      setLogState(true);
+      console.log(res);
+      localStorage.setItem("currentUser", res.data.user.email);
+      setCurrentUser(res.data.user.email);
+      goHome();
+    } else {
+      console.log("its not done");
+    }
   };
-  console.log(currentUser);
   // Submit new account function
   const [code, setCode] = useState(0);
   const submit = async () => {
@@ -93,15 +99,7 @@ export default function Login() {
     }
   };
   if (data == null) {
-    return (
-      <div className="bg-black h-[100vh] text-green-500 font-[monospace]">
-        <div className="bg-white text-black p-1 border-t-2 border-x-2 flex items-center gap-2">
-          <Image src={"/cmd.png"} width={25} height={25} />
-          Q:\front-end\src\pages\loader.exe
-        </div>
-        <p className="p-1">loading...</p>
-      </div>
-    );
+    return <Loading />;
   }
   if (logState !== null && logState == true) {
     goHome();

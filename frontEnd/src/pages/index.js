@@ -2,6 +2,10 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import quiz from "./quiz";
+import Loading from "./components/Loading";
+import User from "./components/User";
+
 // import { lockfilePatchPromise } from "next/dist/build/swc";
 
 export default function Home() {
@@ -15,9 +19,11 @@ export default function Home() {
       console.error(error);
     }
   }
+
   useEffect(() => {
     getData();
   }, []);
+  const [currentQuiz, setCurrentQuiz] = useState(1);
   // User Information
   const [logState, setLogState] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
@@ -34,7 +40,7 @@ export default function Home() {
     router.push(`/quiz?Id=${quizId}`);
   };
   const logIn = () => {
-    router.push(`login`);
+    router.push(`/login`);
   };
   const createQuiz = () => {
     router.push(`/create`);
@@ -42,71 +48,77 @@ export default function Home() {
   // Delete function
   const deleter = (id) => {
     axios.delete(`http://localhost:2007/${id}`);
+    getData();
   };
   // Loading
   if (data == null) {
-    return (
-      <div className="bg-black h-[100vh] text-green-500 font-[monospace]">
-        <div className="bg-white text-black p-1 border-t-2 border-x-2 flex items-center gap-2">
-          <Image src={"/cmd.png"} width={25} height={25} />
-          Q:\front-end\src\pages\loader.exe
-        </div>
-        <p className="p-1">loading...</p>
-      </div>
-    );
+    return <Loading />;
   }
   // Log in page
   if (logState !== null && logState == false) {
     logIn();
   }
-  console.log(logState);
   // Logged in page
   if (logState == true) {
     return (
-      <div className="flex flex-col gap-10 m-2">
-        <div className="flex gap-5">
-          <p>Current User: {currentUser}</p>
-          <button
-            onClick={() => {
-              localStorage.setItem("loggedIn", false);
-              setLogState(false);
-            }}
-            className="bg-red-400 p-1 hover:bg-red-500"
-          >
-            Log Out
-          </button>
-        </div>
-        <div>
-          Quizes:
-          <div className="flex gap-2 bg-blue-300 p-2 rounded-xl">
+      <div className="flex flex-col gap-10 bg-[url('/doodles.png')] h-[100vh] font-nunito">
+        <User currentUser={currentUser} setLogState={setLogState} />
+        <div className="flex flex-col items-center gap-[20px] mt-[100px]">
+          <p className="text-[150px] drop-shadow-lg text-white">QUIZES</p>
+          <div className="flex items-center gap-2 bg-black/[.3] p-2 rounded-xl h-[600px] w-[1500px] overflow-scroll">
             {data.quiz.map((quizes) => {
+              var color =
+                "#" + Math.floor(Math.random() * 16777215).toString(16);
+              function padZero(str, len) {
+                len = len || 2;
+                var zeros = new Array(len).join("0");
+                return (zeros + str).slice(-len);
+              }
+              function invertColor(hex) {
+                if (hex.indexOf("#") === 0) {
+                  hex = hex.slice(1);
+                }
+                var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+                  g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+                  b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+                return "#" + padZero(r) + padZero(g) + padZero(b);
+              }
+              var invertcolor = invertColor(color);
               return (
                 <div
-                  className={`border-2 border-black w-[250px] h-[200px] flex flex-col items-center justify-center bg-white`}
+                  className={`w-[1000px] h-[100%] flex flex-col gap-2 items-center justify-center rounded`}
+                  style={{
+                    backgroundColor: color,
+                    color: invertcolor,
+                  }}
                 >
-                  {quizes.name.toUpperCase()}
-                  <p>question amount: {quizes.questions.length}</p>
+                  <p className="text-[40px] text-center h-[200px] drop-shadow-lg">
+                    {quizes.name?.toUpperCase()}
+                  </p>
+                  <p>Question Amount: {quizes.questions.length}</p>
                   {quizes.creator == currentUser ? (
-                    <div>
-                      <p>creator: you</p>
+                    <div className="flex gap-2">
+                      <p>Creator: You</p>
                       <button
-                        className="bg-red-200 hover:bg-red-300"
+                        className="text-sm p-1 border rounded-sm hover:bg-black/[.3]"
                         onClick={() => {
                           deleter(quizes._id);
                           getData();
                         }}
+                        style={{ borderColor: invertcolor }}
                       >
-                        delete
+                        Delete Quiz
                       </button>
                     </div>
                   ) : (
-                    <p>creator: {quizes.creator}</p>
+                    <p>Creator: {quizes.creator}</p>
                   )}
                   <button
-                    className="bg-gray-200 hover:bg-gray-300"
+                    className="text-sm p-1 border rounded-sm hover:bg-black/[.3]"
                     onClick={() => {
                       startQuiz(quizes._id);
                     }}
+                    style={{ borderColor: invertcolor }}
                   >
                     Start Quiz
                   </button>
@@ -114,15 +126,16 @@ export default function Home() {
               );
             })}
           </div>
+          <p>or you could just</p>
+          <button
+            onClick={() => {
+              createQuiz();
+            }}
+            className="bg-gray-200 hover:bg-gray-300 w-[200px] rounded-[10px]"
+          >
+            Create a new quiz
+          </button>
         </div>
-        <button
-          onClick={() => {
-            createQuiz();
-          }}
-          className="bg-gray-200 hover:bg-gray-300"
-        >
-          Create new quiz
-        </button>
       </div>
     );
   }

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import User from "./components/User";
 
 export default function create() {
   // Current User
-  const [CurrentUser, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState("");
   useEffect(() => {
     if (typeof window !== "undefined") {
       setCurrentUser(localStorage.getItem("currentUser"));
@@ -76,6 +77,7 @@ export default function create() {
   }
   return (
     <div className="m-2">
+      <User currentUser={currentUser} />
       <button
         onClick={() => {
           goHome();
@@ -84,7 +86,7 @@ export default function create() {
       >
         cancel
       </button>
-      <p className="text-gray-400">Creator: {CurrentUser}</p>
+      <p className="text-gray-400">Creator: {currentUser}</p>
       <input
         onChange={(e) => setTypName(e.target.value)}
         placeholder="quiz name"
@@ -119,7 +121,7 @@ export default function create() {
                 type="number"
                 onChange={(e) => {
                   e.target.value < 1 || e.target.value > 4
-                    ? (e.target.value = 0)
+                    ? (e.target.value = 1)
                     : null;
                   typer(e.target.value, "Correct", idx);
                 }}

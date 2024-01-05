@@ -9,11 +9,11 @@ export const getTypes = async (req, res) => {
   const quiz = await QuizModel.find({});
   res.status(200).json({ users: users, quiz: quiz });
 };
-export const postTypes = async (req, res) => {
+export const createQuiz = async (req, res) => {
   const body = req.body;
   const users = await UserModel.find({});
   const quiz = await QuizModel.find({});
-  const hashedPassword = await bcrypt.hash(body.password, 10);
+  // const hashedPassword = await bcrypt.hash(body.password, 10); this is destroying my code somehow
   if (body.type == "user") {
     await UserModel.create({
       email: body.email,
