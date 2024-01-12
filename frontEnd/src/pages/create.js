@@ -35,6 +35,7 @@ export default function create() {
       typAnswer3: "",
       typAnswer4: "",
       Correct: 0,
+      selecting: 1,
     },
   ]);
   const typer = (value, name, count) => {
@@ -52,6 +53,7 @@ export default function create() {
         typAnswer3: "",
         typAnswer4: "",
         Correct: 0,
+        selecting: 1,
       },
     ]);
   };
@@ -59,7 +61,7 @@ export default function create() {
   const finisher = () => {
     var testPost = {
       type: "quiz",
-      creator: CurrentUser,
+      creator: currentUser,
       name: typName,
       questions: [],
     };
@@ -76,78 +78,90 @@ export default function create() {
     goHome();
   }
   return (
-    <div className="m-2">
+    <div className="">
       <User currentUser={currentUser} />
-      <button
-        onClick={() => {
-          goHome();
-        }}
-        className="bg-gray-200 hover:bg-gray-300"
-      >
-        cancel
-      </button>
-      <p className="text-gray-400">Creator: {currentUser}</p>
-      <input
-        onChange={(e) => setTypName(e.target.value)}
-        placeholder="quiz name"
-      ></input>
-      <div className="flex flex-col gap-2">
-        {list.map((e, idx) => {
-          return (
-            <div className="border-2 w-[400px]">
-              <input
-                onChange={(e) => typer(e.target.value, "typQuestion", idx)}
-                placeholder={"Question " + (idx + 1)}
-              ></input>
-              <div>
-                <input
-                  onChange={(e) => typer(e.target.value, "typAnswer1", idx)}
-                  placeholder="Answer 1"
-                ></input>
-                <input
-                  onChange={(e) => typer(e.target.value, "typAnswer2", idx)}
-                  placeholder="Answer 2"
-                ></input>
-                <input
-                  onChange={(e) => typer(e.target.value, "typAnswer3", idx)}
-                  placeholder="Answer 3"
-                ></input>
-                <input
-                  onChange={(e) => typer(e.target.value, "typAnswer4", idx)}
-                  placeholder="Answer 4"
-                ></input>
-              </div>
-              <input
-                type="number"
-                onChange={(e) => {
-                  e.target.value < 1 || e.target.value > 4
-                    ? (e.target.value = 1)
-                    : null;
-                  typer(e.target.value, "Correct", idx);
-                }}
-                placeholder="select from 1-4 for the correct answer"
-                className="w-[300px]"
-              ></input>
-            </div>
-          );
-        })}
+      <div className="flex flex-col items-center justify-center h-[100vh]">
         <button
           onClick={() => {
-            adder();
-          }}
-          className="bg-gray-200 hover:bg-gray-300 w-[400px]"
-        >
-          add more questions
-        </button>
-        <button
-          onClick={() => {
-            finisher();
             goHome();
           }}
-          className="bg-gray-200 hover:bg-gray-300 w-[400px]"
+          className="bg-gray-200 hover:bg-gray-300"
         >
-          done
+          cancel
         </button>
+        <p className="text-gray-400">Creator: {currentUser}</p>
+        <input
+          onChange={(e) => setTypName(e.target.value)}
+          placeholder="quiz name"
+        ></input>
+        <div className="flex flex-col gap-2">
+          {list.map((e, idx) => {
+            return (
+              <div className="border-2 w-[400px]">
+                <input
+                  onChange={(e) => typer(e.target.value, "typQuestion", idx)}
+                  placeholder={"Question " + (idx + 1)}
+                ></input>
+                <div>
+                  <input
+                    onChange={(e) => typer(e.target.value, "typAnswer1", idx)}
+                    placeholder="Answer 1"
+                  ></input>
+                  <input
+                    type="checkbox"
+                    defaultValue={true}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                    }}
+                  ></input>
+                  <input
+                    onChange={(e) => typer(e.target.value, "typAnswer2", idx)}
+                    placeholder="Answer 2"
+                  ></input>
+                  <input type="checkbox" value={false}></input>
+                  <input
+                    onChange={(e) => typer(e.target.value, "typAnswer3", idx)}
+                    placeholder="Answer 3"
+                  ></input>
+                  <input type="checkbox" value={false}></input>
+                  <input
+                    onChange={(e) => typer(e.target.value, "typAnswer4", idx)}
+                    placeholder="Answer 4"
+                  ></input>
+                  <input type="checkbox" value={false}></input>
+                </div>
+                <input
+                  type="number"
+                  onChange={(e) => {
+                    e.target.value < 1 || e.target.value > 4
+                      ? (e.target.value = 1)
+                      : null;
+                    typer(e.target.value, "Correct", idx);
+                  }}
+                  placeholder="select from 1-4 for the correct answer"
+                  className="w-[300px]"
+                ></input>
+              </div>
+            );
+          })}
+          <button
+            onClick={() => {
+              adder();
+            }}
+            className="bg-gray-200 hover:bg-gray-300 w-[400px]"
+          >
+            add more questions
+          </button>
+          <button
+            onClick={() => {
+              finisher();
+              goHome();
+            }}
+            className="bg-gray-200 hover:bg-gray-300 w-[400px]"
+          >
+            done
+          </button>
+        </div>
       </div>
     </div>
   );

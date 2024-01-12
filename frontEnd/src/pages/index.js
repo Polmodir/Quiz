@@ -65,7 +65,7 @@ export default function Home() {
         <User currentUser={currentUser} setLogState={setLogState} />
         <div className="flex flex-col items-center gap-[20px] mt-[100px]">
           <p className="text-[150px] drop-shadow-lg text-white">QUIZES</p>
-          <div className="flex items-center gap-2 bg-black/[.3] p-2 rounded-xl h-[600px] w-[1500px] overflow-scroll">
+          <div className="flex items-center gap-2 bg-black/[.3] p-2 rounded-xl h-[600px] overflow-scroll max-w-[1500px] min-w-[1500px]">
             {data.quiz.map((quizes) => {
               var color =
                 "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -86,13 +86,13 @@ export default function Home() {
               var invertcolor = invertColor(color);
               return (
                 <div
-                  className={`w-[1000px] h-[100%] flex flex-col gap-2 items-center justify-center rounded`}
+                  className={` h-[100%] flex flex-col gap-2 items-center justify-center rounded`}
                   style={{
                     backgroundColor: color,
                     color: invertcolor,
                   }}
                 >
-                  <p className="text-[40px] text-center h-[200px] drop-shadow-lg">
+                  <p className="w-[495px] text-[40px] text-center h-[200px] drop-shadow-lg">
                     {quizes.name?.toUpperCase()}
                   </p>
                   <p>Question Amount: {quizes.questions.length}</p>

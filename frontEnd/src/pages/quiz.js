@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Loading from "./components/Loading";
 import User from "./components/User";
+import { FaRegDizzy } from "react-icons/fa";
+import { FaRegGrinStars } from "react-icons/fa";
+import { FaRegFrown } from "react-icons/fa";
+import { FaRegGrimace } from "react-icons/fa";
+import { FaRegSmile } from "react-icons/fa";
 
 export default function quiz() {
   const [currentUser, setCurrentUser] = useState("");
@@ -80,6 +85,9 @@ export default function quiz() {
       idFilter = e;
     }
   });
+  var resultperc =
+    (Object.keys(results).filter((key) => results[key] == true).length * 100) /
+    idFilter.questions.length;
   if (logState !== null && logState == false) {
     goHome();
   }
@@ -90,17 +98,18 @@ export default function quiz() {
         onClick={() => {
           goHome();
         }}
-        className="w-[250px] text-[40px] bg-red-800 hover:bg-red-900 absolute right-[120px] bottom-[440px] rounded"
+        className="w-[250px] text-[32px] bg-red-800 hover:bg-red-900 absolute right-[0px] top-[0px] rounded flex justify-center gap-5"
       >
         Give up?
+        <Image src={"/baby.png"} height={40} width={40} />
       </button>
       {questionNumber < Object.keys(results).length + 1 ? (
         <div className="flex flex-col items-center  mt-[70px]">
           <p className="text-xl">{idFilter.name}</p>
-          <p className="text-[150px] text-white drop-shadow-lg">
+          <p className="text-[100px] text-white drop-shadow-lg text-center">
             {questionNumber}. {idFilter.questions[questionNumber - 1]?.question}
           </p>
-          <div className="flex wrap gap-2 flex-wrap w-[2000px] text-[100px] mt-[375px] bg-black/[.3] rounded-[25px] justify-center p-3">
+          <div className="flex absolute bottom-[0px] wrap gap-2 flex-wrap w-[2000px] text-[50px] bg-black/[.3] rounded-[25px] justify-center p-3">
             {idFilter.questions[questionNumber - 1]?.answers.map(
               (question, idx) => {
                 var color =
@@ -147,34 +156,76 @@ export default function quiz() {
           </div>
         </div>
       ) : (
-        <div>
-          <p>
-            {idFilter.questions.length}/
-            {Object.keys(results).filter((key) => results[key] == true).length}
-          </p>
-          your results:
-          {Object.keys(results).map((x, idx) => {
-            return (
-              <p>
-                question {idx + 1}:{" "}
-                {results[x]
-                  ? "Correct"
-                  : `Incorrect :/ Akshually der answer is: ${
-                      idFilter.questions[idx].answers[
-                        idFilter.questions[idx].correct - 1
-                      ]
-                    }`}
-              </p>
-            );
-          })}
-          <button
-            onClick={() => {
-              retaker();
-            }}
-            className="bg-gray-200 hover:bg-gray-300"
-          >
-            Retake the quiz
-          </button>
+        <div className="flex items-center justify-center h-[100vh] mt-[50px] gap-20">
+          <div className="text-[150px] border-[5px] bg-black/[.5] border-black rounded-xl flex flex-col items-center p-5 text-white">
+            <p>
+              {idFilter.questions.length}/
+              {
+                Object.keys(results).filter((key) => results[key] == true)
+                  .length
+              }
+            </p>
+          </div>
+          <div className="text-white">
+            <div className="flex gap-[10px] text-[30px]">
+              <p>your results:</p>
+              <p>{resultperc}%</p>
+              {resultperc > 20 ? (
+                resultperc > 40 ? (
+                  resultperc > 60 ? (
+                    resultperc > 80 ? (
+                      <FaRegGrinStars className="h-[40px]" />
+                    ) : (
+                      <FaRegSmile className="h-[40px]" />
+                    )
+                  ) : (
+                    <FaRegGrimace className="h-[40px]" />
+                  )
+                ) : (
+                  <FaRegFrown className="h-[40px]" />
+                )
+              ) : (
+                <FaRegDizzy className="h-[40px]" />
+              )}
+            </div>
+            <div className="bg-black/[.3] h-[650px] rounded-xl p-2 text-[30px] flex flex-col gap-[20px] overflow-y-scroll">
+              {Object.keys(results).map((x, idx) => {
+                return (
+                  <div className="flex gap-2">
+                    <p>{idx + 1}: </p>
+                    {results[x] ? (
+                      <p className="text-green-500">Correct</p>
+                    ) : (
+                      <p className="text-red-500">
+                        Incorrect. Actual answer:{" "}
+                        {
+                          idFilter.questions[idx].answers[
+                            idFilter.questions[idx].correct - 1
+                          ]
+                        }
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+              <button
+                onClick={() => {
+                  retaker();
+                }}
+                className="bg-gray-200 hover:bg-gray-300 text-black"
+              >
+                Retake the quiz
+              </button>
+              <a
+                href="https://en.wikipedia.org/wiki/Suicide_methods"
+                className="absolute right-[0px] bg-red-800/[.5] bottom-0 text-white font-serif text-[15px] w-[200px] h-[180px] text-center flex flex-col items-center border-2 border-red-800 rounded-[100%] p-3"
+              >
+                <Image src={"/troll.png"} width={100} height={100} />
+                Click here if you still have trouble with the quiz after seeing
+                the answers
+              </a>
+            </div>
+          </div>
         </div>
       )}
       {/* <p>{data.quiz[id - 1]?.questions[questionNumber - 1].question}</p>
