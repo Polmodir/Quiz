@@ -10,6 +10,7 @@ import { FaRegGrinStars } from "react-icons/fa";
 import { FaRegFrown } from "react-icons/fa";
 import { FaRegGrimace } from "react-icons/fa";
 import { FaRegSmile } from "react-icons/fa";
+import Head from "next/head";
 
 export default function quiz() {
   const [currentUser, setCurrentUser] = useState("");
@@ -27,7 +28,7 @@ export default function quiz() {
   // console.log("results", results);
   async function getData() {
     try {
-      const res = await axios.get("http://localhost:2007/");
+      const res = await axios.get(`${process.env.BACK_END_URL}`);
       // console.log("");
       console.log("dsadjoias", res.data.quiz);
       setData(res.data);
@@ -93,6 +94,13 @@ export default function quiz() {
   }
   return (
     <div className="flex flex-col bg-[url('/doodles.png')] h-[100vh] font-nunito">
+      <Head>
+        <title>PolQuiz</title>
+        <link
+          rel="icon"
+          href="https://upload.wikimedia.org/wikipedia/en/9/9a/Trollface_non-free.png"
+        ></link>
+      </Head>
       <User currentUser={currentUser} />
       <button
         onClick={() => {

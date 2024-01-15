@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
 import Loading from "./components/Loading";
+import Head from "next/head";
 
 export default function Login() {
   const [page, setPage] = useState("logIn");
@@ -11,7 +12,7 @@ export default function Login() {
   const [data, setData] = useState();
   async function getData() {
     try {
-      const res = await axios.get("http://localhost:2007/");
+      const res = await axios.get(`${process.env.BACK_END_URL}`);
       setData(res.data);
     } catch (error) {
       console.error(error);
@@ -48,7 +49,7 @@ export default function Login() {
     }
   }, []);
   const logInFunction = async () => {
-    const res = await axios.post("http://localhost:2007/login", {
+    const res = await axios.post(`${process.env.BACK_END_URL}login`, {
       email: list.logInMail,
       password: list.logInPass,
     });
@@ -69,7 +70,7 @@ export default function Login() {
   const submit = async () => {
     setPin(true);
     try {
-      const res = await axios.put("http://localhost:2007/", {
+      const res = await axios.put(`${process.env.BACK_END_URL}`, {
         gmail: list.createMail,
       });
       setCode(res.data.code);
@@ -86,7 +87,7 @@ export default function Login() {
   const createAccount = async () => {
     console.log(code, list.pin);
     if (code == list.pin) {
-      await axios.post("http://localhost:2007/", {
+      await axios.post(`${process.env.BACK_END_URL}`, {
         type: "user",
         email: list.createMail,
         password: list.createPass,
@@ -107,6 +108,13 @@ export default function Login() {
   if (page == "logIn") {
     return (
       <div className="flex flex-col gap-4 justify-center items-center h-[100vh] bg-[url('/background2.gif')] text-blue-100 tracking-[8px] font-[serif]">
+        <Head>
+          <title>Login</title>
+          <link
+            rel="icon"
+            href="https://upload.wikimedia.org/wikipedia/en/9/9a/Trollface_non-free.png"
+          ></link>
+        </Head>
         <Image src={"/mrrobot.png"} width={467.25} height={458.75} />
         <p className="text-red-900 text-[13px] font-[monospace]">
           literally you logging in rn
@@ -146,6 +154,13 @@ export default function Login() {
   } else if (page == "Creating") {
     return (
       <div className="flex flex-col gap-2 items-center justify-center bg-[url('/background3.gif')] h-[100vh] font-[serif]">
+        <Head>
+          <title>Create</title>
+          <link
+            rel="icon"
+            href="https://upload.wikimedia.org/wikipedia/en/9/9a/Trollface_non-free.png"
+          ></link>
+        </Head>
         <div className="flex flex-col items-center tracking-[8px] text-sm text-yellow-200 pb-20">
           <Image
             src={"/god.webp"}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 export default function ({ currentUser }) {
   const router = useRouter();
   const logIn = () => {
@@ -7,6 +8,7 @@ export default function ({ currentUser }) {
   };
   return (
     <div className="flex items-center gap-5 bg-black/[.3] p-2 fixed w-[100%] text-white tracking-[1px]">
+      <Image src={"/macmade2.gif"} width={75} height={50} />
       <p>Current User: {currentUser}</p>
       <button
         onClick={() => {

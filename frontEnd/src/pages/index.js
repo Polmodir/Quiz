@@ -5,15 +5,15 @@ import { useRouter } from "next/navigation";
 import quiz from "./quiz";
 import Loading from "./components/Loading";
 import User from "./components/User";
+import Head from "next/head";
 
 // import { lockfilePatchPromise } from "next/dist/build/swc";
 
 export default function Home() {
-  // Fetching data
   const [data, setData] = useState();
   async function getData() {
     try {
-      const res = await axios.get("http://localhost:2007/");
+      const res = await axios.get(`${process.env.BACK_END_URL}`);
       setData(res.data);
     } catch (error) {
       console.error(error);
@@ -47,7 +47,7 @@ export default function Home() {
   };
   // Delete function
   const deleter = (id) => {
-    axios.delete(`http://localhost:2007/${id}`);
+    axios.delete(`${process.env.BACK_END_URL}${id}`);
     getData();
   };
   // Loading
@@ -62,6 +62,13 @@ export default function Home() {
   if (logState == true) {
     return (
       <div className="flex flex-col gap-10 bg-[url('/doodles.png')] h-[100vh] font-nunito">
+        <Head>
+          <title>PolQuiz</title>
+          <link
+            rel="icon"
+            href="https://upload.wikimedia.org/wikipedia/en/9/9a/Trollface_non-free.png"
+          ></link>
+        </Head>
         <User currentUser={currentUser} setLogState={setLogState} />
         <div className="flex flex-col items-center gap-[20px] mt-[100px]">
           <p className="text-[150px] drop-shadow-lg text-white">QUIZES</p>
@@ -75,9 +82,7 @@ export default function Home() {
                 return (zeros + str).slice(-len);
               }
               function invertColor(hex) {
-                if (hex.indexOf("#") === 0) {
-                  hex = hex.slice(1);
-                }
+                hex = hex.slice(1);
                 var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
                   g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
                   b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
